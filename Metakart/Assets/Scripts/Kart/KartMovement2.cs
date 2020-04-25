@@ -2,7 +2,6 @@
 
 public class KartMovement2 : MonoBehaviour
 {
-    private readonly float collisionOffset = 0.01f;
     private Transform[] raysPosList; //Raycast order: FrontLeft, FrontRight, BackLeft, BackRight
     private Rigidbody kartBody;
     private GroundInfo groundInfo;
@@ -48,6 +47,7 @@ public class KartMovement2 : MonoBehaviour
     public void FixedUpdate()
     {
         Vector3 friction_v = Vector3.zero;
+        print(groundInfo.floorNormal);
         Vector3 direction_v = Vector3.Cross(kartBody.transform.right, groundInfo.floorNormal);//kartBody.transform.forward;
         Vector3 kartPosition = kartBody.position;
 

@@ -18,7 +18,7 @@ public class GroundInfo
         hitsList = new RaycastHit[4];
     }
 
-    public void CheckGround(Transform[] raysList, Vector3 rayDirection, Collider collider)
+    public void CheckGround(Transform[] raysList, Vector3 rayDirection, Collider kartcollider)
     {
         numOfHits = 0;
         float smallestDist = 32f;
@@ -28,7 +28,7 @@ public class GroundInfo
         {
             if (Physics.Raycast(raysList[i].position, rayDirection, out RaycastHit hit, rayDistance))
             {
-                if (hit.collider == collider)
+                if (hit.collider == kartcollider)
                     continue;
 
                 numOfHits += 1;
