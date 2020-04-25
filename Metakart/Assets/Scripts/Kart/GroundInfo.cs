@@ -18,16 +18,19 @@ public class GroundInfo
         hitsList = new RaycastHit[4];
     }
 
-    public void CheckGround(Transform[] raysList, Vector3 rayDirection)
+    public void CheckGround(Transform[] raysList, Vector3 rayDirection, Collider collider)
     {
         numOfHits = 0;
-        float smallestDist = 32;
+        float smallestDist = 32f;
         bool rayHits = false;
         Vector3 normal = Vector3.zero;
         for (int i = 0; i < 4; i++)
         {
             if (Physics.Raycast(raysList[i].position, rayDirection, out RaycastHit hit, rayDistance))
             {
+                if (hit.collider == collider)
+                    continue;
+
                 numOfHits += 1;
                 hitsList[i] = hit;
                 rayHits = true;
@@ -39,19 +42,30 @@ public class GroundInfo
         
         oneRayHits = rayHits;
         floorDistance = smallestDist;
-        if (numOfHits < 2)
-            floorNormal = Vector3.up;
-        else
+        if (rayHits)
             floorNormal = normal.normalized;
+        else
+            floorNormal = Vector3.up;
     }
 
     public void PrintHits()
     {
-        string mensaje = "Front: " + hitsList[0].normal + "\n" +
-                  "Back:  " + hitsList[1].normal + "\n" +
-                  "Left:  " + hitsList[2].normal + "\n" +
-                  "Right: " + hitsList[3].normal + "\n";
+        string mensaje = "FL: " + hitsList[0].normal + "\n" +
+                  "FR:  " + hitsList[1].normal + "\n" +
+                  "BL:  " + hitsList[2].normal + "\n" +
+                  "BR: " + hitsList[3].normal + "\n";
 
+        Debug.Log(mensaje);
+    }
+
+    public void PrintBools()
+    {
+        string mensaje = "";
+        for (int i = 0; i < 4; i++)
+        {
+            if (hitsList[i].GetType() != null)
+                mensaje += i;
+        }
         Debug.Log(mensaje);
     }
 }
