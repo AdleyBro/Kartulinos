@@ -11,13 +11,16 @@ public class KartMovement2 : MonoBehaviour
     private float maxSteer;
     private float accel_val;
     private float accel_in;
+    private float acceleration;
+    private float friction;
     private float steer_in;
     private readonly float gravFactor = 0.2f;
+    private float gravity;
     private float groundDist;
-    private bool onFloor;
+    private bool lowOffset;
     private Vector3 accel_v;
     private Vector3 velocity_v;
-    private Vector3 gravity_v;
+    private Vector3 inertia_v;
     private Vector3 normal_v;
 
     public void Start()
@@ -28,12 +31,14 @@ public class KartMovement2 : MonoBehaviour
         maxSteer = 2f;
         kartCollider = GetComponent<CapsuleCollider>();
         kartBody = GetComponent<Rigidbody>();
-        groundDist = kartCollider.bounds.extents.y + 0.01f;
+        groundDist = kartCollider.bounds.extents.y + 0.2f;
         groundInfo = new GroundInfo(1f);
         velocity_v = Vector3.zero;
         accel_v = Vector3.zero;
-        gravity_v = Vector3.zero;
+        inertia_v = Vector3.zero;
+        gravity = 0f;
         accel_val = 0.2f;
+        acceleration = 0f;
         normal_v = kartBody.transform.up;
     }
 
@@ -41,35 +46,45 @@ public class KartMovement2 : MonoBehaviour
     {
         PlayerInput();
         PrintRays(); // Debug purpose only
-        
     }
 
     public void FixedUpdate()
     {
         Vector3 friction_v = Vector3.zero;
-        print(groundInfo.floorNormal);
-        Vector3 direction_v = Vector3.Cross(kartBody.transform.right, groundInfo.floorNormal);//kartBody.transform.forward;
+        Vector3 direction_v = kartBody.transform.forward;
         Vector3 kartPosition = kartBody.position;
+        Vector3 offset = SolvePenetration(kartBody.rotation);
 
         groundInfo.CheckGround(raysPosList, Vector3.down, kartCollider);
-        if (onFloor || groundInfo.floorDistance <= groundDist) // If kart on floor
+        if (lowOffset || groundInfo.floorDistance <= groundDist) // If kart on floor
         {
-            gravity_v = Vector3.zero;
-            accel_v = direction_v * accel_in * accel_val * Time.deltaTime;
-            if (accel_in == 0f)
-                friction_v = -velocity_v * 2f * Time.deltaTime;
+            gravity = 0f;
+            acceleration += accel_in * accel_val * Time.deltaTime;
+            if (accel_in == 0f) {
+                friction = -acceleration * 0.6f * Time.deltaTime;
+                acceleration += friction;
+            }
+                
+            accel_v = direction_v * acceleration;
+            inertia_v = accel_v;    // Furrula bien pero cuando aterriza en el suelo la inercia desaparece
         }
         else
         {
-            gravity_v += Vector3.down * gravFactor * Time.deltaTime;
-            accel_v = Vector3.zero;
+            if (offset == Vector3.zero)
+                gravity += gravFactor * Time.deltaTime;
+            accel_v = inertia_v;
         }
 
-        velocity_v += accel_v + friction_v;
-        velocity_v = Vector3.ClampMagnitude(velocity_v, maxSpeed);
+        if (acceleration > maxSpeed)
+            acceleration = maxSpeed;
 
-        Vector3 offset = SolvePenetration(kartBody.rotation);
-        kartBody.MovePosition(kartPosition + (velocity_v.magnitude * direction_v) + gravity_v + offset);
+        velocity_v = accel_v + friction_v;
+        velocity_v.y -= gravity;
+
+        //if (groundInfo.floorDistance <= groundDist)
+        //    offset += -kartBody.transform.up * 0.01f;
+        
+        kartBody.MovePosition(kartPosition + velocity_v + offset);
 
         normal_v = Vector3.Lerp(normal_v, groundInfo.floorNormal, 10f * Time.deltaTime);
         Quaternion rotation = Quaternion.FromToRotation(kartBody.transform.up, normal_v);
@@ -77,7 +92,7 @@ public class KartMovement2 : MonoBehaviour
         kartBody.MoveRotation(rotation * kartBody.rotation);
     }
 
-    Vector3 SolvePenetration(Quaternion rotationStream)
+    private Vector3 SolvePenetration(Quaternion rotationStream)
     {
         Vector3 summedOffset = Vector3.zero;
         for (var solveIterations = 0; solveIterations < 3; solveIterations++)
@@ -86,7 +101,7 @@ public class KartMovement2 : MonoBehaviour
         return summedOffset;
     }
 
-    Vector3 CalcPentrationOffset(Quaternion rotationStream, Vector3 summedOffset)
+    private Vector3 CalcPentrationOffset(Quaternion rotationStream, Vector3 summedOffset)
     {
         Vector3 position = kartCollider.transform.position;
         var capsuleAxis = rotationStream * Vector3.forward * kartCollider.height * 0.5f;
@@ -113,10 +128,11 @@ public class KartMovement2 : MonoBehaviour
             }
         }
 
-        if (summedOffset != Vector3.zero)
-            onFloor = true;
+        float offsetMagn = summedOffset.sqrMagnitude;
+        if (offsetMagn > 0f && offsetMagn <= 0.01f)
+            lowOffset = true;
         else
-            onFloor = false;
+            lowOffset = false;
 
         return summedOffset;
     }
