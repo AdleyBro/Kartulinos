@@ -1,0 +1,147 @@
+{
+    "name": "InputManager",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "aa288812-bd35-4943-b614-7602aa181994",
+            "actions": [
+                {
+                    "name": "Steering",
+                    "type": "Value",
+                    "id": "f4fe4a30-8575-4684-8aba-2cf6b56d62c6",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Accelerating",
+                    "type": "Value",
+                    "id": "0e9c935c-ac2e-4393-bb9c-532013249a0f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Regressing",
+                    "type": "Value",
+                    "id": "8c086c45-c7e2-45e7-8ce3-a4c51f9b6612",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LookBack",
+                    "type": "Value",
+                    "id": "5d42e107-f10f-4bb6-96c2-a6374ed97c07",
+                    "expectedControlType": "DiscreteButton",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Drifting",
+                    "type": "Value",
+                    "id": "5e4bffa8-3648-4807-8824-977dc5f938ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "UsingItem",
+                    "type": "Value",
+                    "id": "0e326134-aaba-46a4-ac31-4eebb0752aae",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "GetItem",
+                    "type": "Button",
+                    "id": "8879691f-e304-4d91-8112-af8888d90f6f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d843f07e-abd8-4477-ac8f-3d0324f3f6b0",
+                    "path": "<Joystick>/stick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steering",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce88c88c-533f-4fa4-9c7e-d454c78baf8e",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerating",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c43e9cf3-7f3a-4d71-98e3-97dc9ee1d4a4",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Regressing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "527a2354-5c49-4c94-b763-0f86dc5ac4c8",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LookBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8d8d6a1-fccc-43e6-bd41-36cc07895861",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drifting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6438e15-f477-4d80-8063-a14a04d6504b",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UsingItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d3e3a4e-47b7-42c2-853e-51652e205bf6",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GetItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

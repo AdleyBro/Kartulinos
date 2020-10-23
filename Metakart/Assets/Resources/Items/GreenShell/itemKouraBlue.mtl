@@ -1,0 +1,9 @@
+# Created by Every File Explorer
+
+newmtl mat_kouraBlue
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+d 1
+map_Kd itemKouraBlue.png
+
