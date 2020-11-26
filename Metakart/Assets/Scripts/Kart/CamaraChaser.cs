@@ -2,20 +2,29 @@
 
 public class CamaraChaser : MonoBehaviour
 {
-    private Vector3 wantedDir;
-    private Vector3 lookAt;
+    private Vector3 differenceV;
+    private Vector3 wantedPosition;
     private float cameraFov = 60f;
+    private float maxDistance;
     public KartMovement2 kartMovement;
     public Transform player;
 
+    private void Start()
+    {
+        differenceV = kartMovement.transform.position - transform.position;
+    }
+
     private void FixedUpdate()
     {
+        // FOV ------------------------
         if (kartMovement.GetIsBoosting())
             cameraFov = Mathf.Lerp(cameraFov, 70f, 4f * Time.deltaTime);
         else
             cameraFov = Mathf.Lerp(cameraFov, 60f, 4f * Time.deltaTime);
         GetComponent<Camera>().fieldOfView = cameraFov;
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        /*
         Vector3 velocityDir;
         int drifting = kartMovement.GetDrifting();
         if (kartMovement.GetVelocity().magnitude < 0.1f)
@@ -32,8 +41,12 @@ public class CamaraChaser : MonoBehaviour
         if (kartMovement.GetLookBack()) {
             lookAt -= wantedDir;
         }
+        */
 
-        height = Vector3.Lerp(height, kartMovement.GetUp() * 8f, 8f * Time.deltaTime);
-        transform.LookAt(lookAt);
+        Quaternion rotation = Quaternion.FromToRotation(differenceV, kartMovement.GetForward());
+        differenceV = rotation * differenceV;
+        Vector3 position = kartMovement.transform.position + differenceV;
+        wantedPosition = Vector3.Lerp(wantedPosition, position, Time.deltaTime * 7f);
+        transform.position = rotation * wantedPosition;
     }
 }
