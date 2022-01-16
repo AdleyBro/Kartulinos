@@ -1,7 +1,7 @@
 # Kartulinos (name yet to be determined)
 Arcade kart racing game, inspired mostly in Mario Kart. It is meant to be a **free**, **open-source game**, so that everyone can contribute to the code. Also it is **meant to give the possibility of creating addons for the game**.
 
-I don't have experience working in this kind of projects (first game, too. Probably the last, lol), but I'm willing to learn and accept any help you give. Also, I don't know how to create 3D models.
+I don't have experience working on this kind of projects (first game, too. Probably the last, lol), but I'm willing to learn and accept any help you give. Also, I don't know how to create 3D models.
 
 This game is made in Unity and the graphics should be low-poly, similar to the NDS Mario Kart. The idea is to make it "simple" and funny to play, especially with the intention to facilitate the addition of mods or addons.
 
