@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using UnityEngine;
+using kart_action;
 
 public class ItemBoxAction : MonoBehaviour
 {
     private Vector3 upV;
     private Vector3 rightV;
     private Vector3 forwardV;
+    private MeshRenderer mesh;
     private ItemPicker itemPicker;
-    private bool ready = true;
+    //private bool ready = true;
     private float position = 0f;
     private float speed = 1f;
     private float sign = 1f;
+
+
 
     private void Start()
     {
@@ -18,6 +22,7 @@ public class ItemBoxAction : MonoBehaviour
         rightV = transform.right;
         forwardV = transform.forward;
         itemPicker = GetComponentInParent<ItemPicker>();
+        mesh = GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -34,23 +39,21 @@ public class ItemBoxAction : MonoBehaviour
 
     private void OnTriggerStay(Collider collider)
     {
-        if (ready && collider.tag == "Player")
+        if (mesh.enabled && collider.tag == "Player")
         {
             StartCoroutine(DisappearAndReload());
-            KartMovement2 player = collider.GetComponent<KartMovement2>();
+            KartAction player = collider.GetComponent<KartAction>();
             if (!player.IsHoldingItem()) {
                 Item item = itemPicker.PickRandomItem();
-                collider.gameObject.GetComponent<KartMovement2>().SetHoldingItem(item);
+                player.SetHoldingItem(item);
             }
         }
     }
 
     IEnumerator DisappearAndReload()
     {
-        GetComponent<MeshRenderer>().enabled = false;
-        ready = false;
+        mesh.enabled = false;
         yield return new WaitForSeconds(2f);
-        GetComponent<MeshRenderer>().enabled = true;
-        ready = true;
+        mesh.enabled = true;
     }
 }

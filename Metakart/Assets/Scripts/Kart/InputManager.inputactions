@@ -2,14 +2,14 @@
     "name": "InputManager",
     "maps": [
         {
-            "name": "Player",
+            "name": "Player1",
             "id": "aa288812-bd35-4943-b614-7602aa181994",
             "actions": [
                 {
                     "name": "Steering",
                     "type": "Value",
                     "id": "f4fe4a30-8575-4684-8aba-2cf6b56d62c6",
-                    "expectedControlType": "Stick",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
                 },
@@ -31,9 +31,9 @@
                 },
                 {
                     "name": "LookBack",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "5d42e107-f10f-4bb6-96c2-a6374ed97c07",
-                    "expectedControlType": "DiscreteButton",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -60,12 +60,50 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "LeftJoyStick",
+                    "type": "Value",
+                    "id": "89d02c88-3b21-4e17-9134-636a5e59fa56",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Teleport",
+                    "type": "Button",
+                    "id": "ba9d138d-6372-4d5b-bc67-c4b5356b0bfa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "d843f07e-abd8-4477-ac8f-3d0324f3f6b0",
+                    "path": "<XInputController>/leftStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steering",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14cb4853-466b-4bdb-b4fd-1e92d99f49a8",
+                    "path": "<Gamepad>/leftStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steering",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0018d13-0498-4e84-81ba-32861b281d59",
                     "path": "<Joystick>/stick/x",
                     "interactions": "",
                     "processors": "",
@@ -77,6 +115,28 @@
                 {
                     "name": "",
                     "id": "ce88c88c-533f-4fa4-9c7e-d454c78baf8e",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerating",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3820193a-e888-40ef-93ae-944e1aafd623",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Accelerating",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1c6e63a-0c85-409d-9737-447022a7a9be",
                     "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button2",
                     "interactions": "",
                     "processors": "",
@@ -88,6 +148,28 @@
                 {
                     "name": "",
                     "id": "c43e9cf3-7f3a-4d71-98e3-97dc9ee1d4a4",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Regressing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8515d0c2-076c-4dac-9895-c8a15c084440",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Regressing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3be24499-ed00-4622-96f3-0a29fd0df7ff",
                     "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button3",
                     "interactions": "",
                     "processors": "",
@@ -99,7 +181,29 @@
                 {
                     "name": "",
                     "id": "527a2354-5c49-4c94-b763-0f86dc5ac4c8",
-                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button4",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LookBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "539d337b-b711-4472-b3c4-9aabd4a6b40a",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LookBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e20abe8-4324-4af0-811d-b60139978112",
+                    "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/trigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -110,6 +214,28 @@
                 {
                     "name": "",
                     "id": "f8d8d6a1-fccc-43e6-bd41-36cc07895861",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drifting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d8a3553-385a-410c-8891-231d5efda3dd",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drifting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb68d975-d7b0-439d-ae41-9961c53f31c0",
                     "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button6",
                     "interactions": "",
                     "processors": "",
@@ -121,6 +247,28 @@
                 {
                     "name": "",
                     "id": "c6438e15-f477-4d80-8063-a14a04d6504b",
+                    "path": "<XInputController>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UsingItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "821bb444-e4e9-43c3-ae72-1e8c868517e6",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UsingItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e0c1730d-ce43-4461-bd85-39259d4b4807",
                     "path": "<HID::MY-POWER CO.,LTD. USB Joystick>/button5",
                     "interactions": "",
                     "processors": "",
@@ -139,9 +287,81 @@
                     "action": "GetItem",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e764eb1-a845-40df-afef-95a10aef6fa7",
+                    "path": "<Gamepad>/leftStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftJoyStick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22bbca3c-86b8-409e-9812-cd0d56d3ffc2",
+                    "path": "<XInputController>/leftStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftJoyStick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48f3f2fe-d90b-4f8b-ba1b-72013f1a8886",
+                    "path": "<Joystick>/stick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftJoyStick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57f42824-c32f-4002-842d-bdc44d510823",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Teleport",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "Test",
+            "bindingGroup": "Test",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Player2",
+            "bindingGroup": "Player2",
+            "devices": [
+                {
+                    "devicePath": "<HID::MY-POWER CO.,LTD. USB Joystick>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

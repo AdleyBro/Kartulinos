@@ -1,77 +1,119 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 // This method takes a list of raycast transforms and gathers information about the floor beneath the kart.
 public class GroundInfo
 {
     private bool hugFloor;
-    private readonly float rayDistance;
+    private bool isOnFloor;
+    public readonly float rayDistance;
     private float smallestDist;
-    public float frontalFrictionCoef;
-    public float lateralFrictionCoef;
+    public float frontalFricForce;
+    public float lateralFricForce;
     public float floorDistance; //Is the smallest distance from one of the four raycasts to the floor
+    public string floorType;
     public Vector3 floorNormal;
     public RaycastHit[] hitsList;
-    public int numOfHits;
+    private Stack<RaycastHit> raycastHits;
 
-    public GroundInfo(float rayDistance)
+    // float array should ALWAYS have two values. 
+    // float[0] = frontal force
+    // float[1] = lateral force
+    private Dictionary<string, float[]> frictionForces = new Dictionary<string, float[]>();
+    
+    public GroundInfo(float rayDistance, float colliderExtents, bool hugFloor)
     {
         this.rayDistance = rayDistance;
-        hitsList = new RaycastHit[4];
-        hugFloor = false;
+        hitsList = new RaycastHit[5];
+        this.hugFloor = hugFloor;
+        raycastHits = new Stack<RaycastHit>();
+        floorType = "Road";
+
+        InitializeFrictionForces();
     }
 
-    public void CheckGroundKart(Transform[] raysList, CapsuleCollider kartCollider, Vector3 kartDown)
+    private void InitializeFrictionForces()
     {
-        numOfHits = 0;
-        bool rayHits = false;
-        Vector3 normal = Vector3.zero;
-        smallestDist = 2f;
-        for (int i = 0; i < 4; i++)
+        frictionForces.Add("Road",      new float[2] { 100f, 1000f });
+        frictionForces.Add("Offroad",   new float[2] { 400f, 1000f });
+        frictionForces.Add("Dirt",      new float[2] { 100f, 400f });
+    }
+
+    public void CheckFloorNormalAndDist(Transform[] raysList, Collider kartCollider, Vector3 kartDown)
+    {
+        floorNormal = Vector3.zero;
+        floorDistance = 0;
+        Vector3 rayDir = hugFloor ? kartDown : Vector3.down;
+        
+        for (int i = 3; i >= 0; i--)
         {
-            if (Physics.Raycast(raysList[i].position, hugFloor ? kartDown : Vector3.down, out RaycastHit hit, rayDistance))
+            if (Physics.Raycast(raysList[i].position, rayDir, out RaycastHit hit, rayDistance))
             {
-                if (hit.collider == kartCollider)
-                    continue;
-
-                Vector3 hitNormal = hit.normal;
-                if (Vector3.Angle(-kartDown, hitNormal) < 50f) {
-                    numOfHits += 1;
-                    hitsList[i] = hit;
-                    rayHits = true;
-                    normal += hit.normal;
-
-                    if (hit.distance < smallestDist)
-                        smallestDist = hit.distance;
-                }            
+                if (Vector3.Angle(hit.normal, kartDown) > 130f)
+                {
+                    raycastHits.Push(hit);
+                    floorDistance += hit.distance;
+                }
             }
         }
+        
+        int count = raycastHits.Count;
+        floorDistance /= count;
 
-        if (Physics.Raycast(kartCollider.transform.position, kartDown, out RaycastHit hit1, rayDistance))
+        if (double.IsNaN(floorDistance) || double.IsInfinity(floorDistance))
+            floorDistance = 0f;
+        
+        isOnFloor = count > 0;
+        if (isOnFloor)
         {
-            if (hit1.distance < smallestDist)
-                smallestDist = hit1.distance;
-
-            string floorType = hit1.transform.tag;
-            if (floorType.Equals("Offroad")) {
-                frontalFrictionCoef = 0.004f;
-                lateralFrictionCoef = 60f;
-            }
-            else if (floorType.Equals("Dirt"))
+            if (count == 1)
+                floorNormal = raycastHits.Pop().normal;
+            else if (count == 2)
             {
-                frontalFrictionCoef = 0.001f;
-                lateralFrictionCoef = 15f;
+                RaycastHit firstHit = raycastHits.Pop();
+                RaycastHit secondHit = raycastHits.Pop();
+
+                Vector3 tempNormal = firstHit.normal + secondHit.normal;
+                Vector3 pointVector = firstHit.point - secondHit.point;
+
+                Vector3 tempCross = Vector3.Cross(tempNormal, pointVector);
+
+                floorNormal = Vector3.Cross(pointVector, tempCross).normalized;
             }
-            else if (floorType.Equals("Road")) {
-                frontalFrictionCoef = 0.001f;
-                lateralFrictionCoef = 60f;
+            else
+            {
+                Vector3[] pointVectors = new Vector3[count];
+                RaycastHit firstHit = raycastHits.Peek();
+
+                for (int i = 0; i < count-1; i++)
+                    pointVectors[i] = raycastHits.Pop().point - raycastHits.Peek().point;
+
+                pointVectors[count - 1] = raycastHits.Pop().point - firstHit.point;
+
+                Vector3 tempNormal = Vector3.zero;
+                for (int i = 0; i < count; i++)
+                    tempNormal += Vector3.Cross(pointVectors[i], pointVectors[(i+1) % count]);
+
+                floorNormal = tempNormal.normalized;
+                //raycastHits.Pop();
             }
         }
+    }
 
-        floorDistance = smallestDist;
-        if (rayHits)
-            floorNormal = normal.normalized;
-        else
-            floorNormal = Vector3.up;
+    public void CheckFloorType(Vector3 raycastPos, Vector3 direction)
+    {
+        if (Physics.Raycast(raycastPos, direction, out RaycastHit hit, rayDistance))
+            floorType = hit.transform.tag;
+    }
+
+    public void UpdateFrictionForces()
+    {
+        float[] forces;
+        if (!frictionForces.TryGetValue(floorType, out forces))
+            frictionForces.TryGetValue("Road", out forces);
+
+        frontalFricForce = forces[0];
+        lateralFricForce = forces[1];
     }
 
     public void CheckGroundShell(Transform rayPos, SphereCollider shellCollider, Vector3 shellDown)
@@ -90,29 +132,23 @@ public class GroundInfo
         }
     }
 
+    public float FloorAngle(Vector3 kartNormal)
+    {
+        return Vector3.Angle(kartNormal, floorNormal);
+    }
+
     public void SetHugFloor(bool hugFloor)
     {
         this.hugFloor = hugFloor;
     }
 
-    public void PrintHits()
+    public bool IsOnFloor()
     {
-        string mensaje = "FL: " + hitsList[0].normal + "\n" +
-                  "FR:  " + hitsList[1].normal + "\n" +
-                  "BL:  " + hitsList[2].normal + "\n" +
-                  "BR: " + hitsList[3].normal + "\n";
-
-        Debug.Log(mensaje);
+        return isOnFloor;
     }
 
-    public void PrintBools()
+    public RaycastHit[] getHitsList()
     {
-        string mensaje = "";
-        for (int i = 0; i < 4; i++)
-        {
-            if (hitsList[i].GetType() != null)
-                mensaje += i;
-        }
-        Debug.Log(mensaje);
+        return hitsList;
     }
 }

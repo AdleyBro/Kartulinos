@@ -1,122 +1,80 @@
-﻿using System.Collections;
+﻿using kart_action;
+using kartstates;
+using System.Collections;
 using UnityEngine;
 
 public class GreenShellMovement : MonoBehaviour
 {
-    private Vector3 directionV;
-    private Vector3 gravityV;
     private SphereCollider shellCollider;
     private Rigidbody shellBody;
     private GameObject particles;
     private GroundInfo groundInfo;
-    private readonly Collider[] colliderBuffer = new Collider[8];
-    private bool isOnFloor;
-    private bool canCollide = true;
-    private float speed = 30f;
-    private float groundDist;
-    private int maxHits = 3;
+    private MeshRenderer model;
+    private int maxHits = 10;
+    private float timer = 0f;
+    private float maxSecondsAlive = 15f;
+    private readonly float STUNDURATION = 2f;
 
     private void Start()
     {
-        directionV = transform.forward;
         shellCollider = GetComponent<SphereCollider>();
         shellBody = GetComponent<Rigidbody>();
+        model = GetComponent<MeshRenderer>();
         particles = Resources.Load<GameObject>("BrokenShellParticle");
-        groundDist = shellCollider.bounds.extents.y + 0.05f;
-        groundInfo = new GroundInfo(1f);
-        groundInfo.SetHugFloor(true);
-        //StartCoroutine(AutoDestroy());
+        groundInfo = new GroundInfo(1f, shellCollider.bounds.extents.y, true);
+
+        shellBody.AddForce(transform.forward * 2400f);
+    }
+
+    private void Update()
+    {
+        Quaternion wantedRotation = Quaternion.FromToRotation(model.transform.up, groundInfo.floorNormal) * model.transform.rotation;
+        model.transform.rotation = Quaternion.Slerp(model.transform.rotation, wantedRotation.normalized, 1);
+        model.transform.Rotate(model.transform.up, 600f * Time.deltaTime);
     }
 
     private void FixedUpdate()
     {
-        groundInfo.CheckGroundShell(transform, shellCollider, -transform.up);
-
-        isOnFloor = groundInfo.floorDistance <= groundDist;
-        if (isOnFloor) {
-            gravityV = Vector3.zero;
-            directionV = Vector3.ProjectOnPlane(directionV, groundInfo.floorNormal).normalized;
-        }
+        if (timer >= maxSecondsAlive)
+            Break();
         else
-            gravityV = Vector3.down * 0.01f;
+            timer += Time.fixedDeltaTime;
 
-        Quaternion rotation = Quaternion.FromToRotation(shellBody.transform.up, groundInfo.floorNormal);
-        shellBody.MoveRotation(rotation * shellBody.rotation);
-
-        directionV += gravityV;
-        shellBody.MovePosition(shellBody.position + directionV * speed * Time.deltaTime);
-        shellBody.transform.position += SolvePenetration(shellBody.rotation);
+        groundInfo.CheckGroundShell(transform, shellCollider, -model.transform.up);
+        if (!groundInfo.IsOnFloor())
+            shellBody.AddForce(Vector3.down * 20f);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!canCollide)
-            return;
+        Collider collider = collision.collider;
+        if (collider.tag.Equals("Player"))
+        {
+            KartAction k = collider.GetComponent<KartAction>();
+            k.stateManager.ChangeState(new Wounded(k, STUNDURATION));
+            Break();
+        }
+
+        if (collider.tag.Equals("Projectile"))
+            Break();
+               
         
         Vector3 collisionNormal = collision.GetContact(0).normal;
-        print(Vector3.Angle(groundInfo.floorNormal, collisionNormal));
-        if (Vector3.Angle(groundInfo.floorNormal, collisionNormal) >= 70f)
+        if (Vector3.Angle(groundInfo.floorNormal, collisionNormal) >= 60f)
         {
-            StartCoroutine(CollideCooldown());
-            if (maxHits == 1)
+            if (maxHits < 2)
                 Break();
-            maxHits--;
-            directionV = Vector3.Reflect(directionV, collisionNormal);
+            else
+            {
+                maxHits--;
+                shellBody.velocity = Vector3.Reflect(-collision.relativeVelocity, collisionNormal);
+            }
         }
-    }
-
-    IEnumerator AutoDestroy()
-    {
-        yield return new WaitForSeconds(15f);
-        Break();
-    }
-
-    IEnumerator CollideCooldown()
-    {
-        canCollide = false;
-        yield return new WaitForSeconds(0.25f);
-        canCollide = true;
     }
 
     private void Break()
     {
         Instantiate(particles, transform.position, Quaternion.identity);
         Destroy(shellBody.gameObject);
-    }
-
-    private Vector3 SolvePenetration(Quaternion rotationStream)
-    {
-        Vector3 summedOffset = Vector3.zero;
-        for (int solveIterations = 0; solveIterations < 6; solveIterations++)
-            summedOffset = CalcPentrationOffset(rotationStream, summedOffset);
-
-        return summedOffset;
-    }
-
-    private Vector3 CalcPentrationOffset(Quaternion rotationStream, Vector3 summedOffset)
-    {
-        Vector3 position = shellCollider.transform.position;
-        int kartCapsuleHitCount = Physics.OverlapSphereNonAlloc(position, shellCollider.radius, colliderBuffer, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore);
-
-        for (int i = 0; i < kartCapsuleHitCount; i++)
-        {
-            Collider hitCollider = colliderBuffer[i];
-            if (hitCollider == shellCollider)
-                continue;
-
-            Transform hitColliderTransform = hitCollider.transform;
-            if (Physics.ComputePenetration(shellCollider, position + summedOffset, rotationStream, hitCollider, hitColliderTransform.position, hitColliderTransform.rotation, out Vector3 separationDirection, out float separationDistance))
-            {
-                Vector3 offset = separationDirection * (separationDistance + Physics.defaultContactOffset);
-                if (Mathf.Abs(offset.x) > Mathf.Abs(summedOffset.x))
-                    summedOffset.x = offset.x;
-                if (Mathf.Abs(offset.y) > Mathf.Abs(summedOffset.y))
-                    summedOffset.y = offset.y;
-                if (Mathf.Abs(offset.z) > Mathf.Abs(summedOffset.z))
-                    summedOffset.z = offset.z;
-            }
-        }
-
-        return summedOffset;
     }
 }

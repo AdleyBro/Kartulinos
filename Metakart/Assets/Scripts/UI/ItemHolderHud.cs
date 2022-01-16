@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using kart_action;
 
 public class ItemHolderHud : MonoBehaviour
 {
-    private KartMovement2 player;
+    private KartAction player;
     private Image image;
 
     private void Start()
     {
-        player = GetComponentInParent<KartMovement2>();
+        player = GetComponentInParent<KartAction>();
         image = transform.Find("Item").GetComponent<Image>();
         StartCoroutine(UpdateHoldingItem());
     }
@@ -20,7 +21,7 @@ public class ItemHolderHud : MonoBehaviour
             image.sprite = null;
             image.color = Color.clear;
             yield return new WaitUntil(() => player.IsHoldingItem());
-            image.sprite = Resources.Load<Sprite>(player.GetHoldingItem().name);
+            image.sprite = Resources.Load<Sprite>(player.GetHoldingItem().GetIconImagePath());
             image.color = Color.white;
             yield return new WaitUntil(() => !player.IsHoldingItem());
         }

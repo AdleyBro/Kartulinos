@@ -1,19 +1,12 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using kart_action;
+using power_up;
 
 public class Boost : Item
 {
     public Boost() : base("UI/ItemHud/mushroom") { }
 
-    public override void Utilize(KartMovement2 player)
+    public override PowerUpState GetPowerUpState(KartAction k)
     {
-        coroutineController.StartCoroutine(AddBoost(player));
-    }
-
-    IEnumerator AddBoost(KartMovement2 player)
-    {
-        player.SetIsBoosting(true);
-        yield return new WaitForSeconds(2f);
-        player.SetIsBoosting(false);
+        return new BoostState(k);
     }
 }

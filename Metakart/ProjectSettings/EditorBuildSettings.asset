@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/StartMenu.unity
+    path: Assets/Scenes/MainMenu/StartMenu.unity
     guid: 4e748cd3f9c275c4d98661b811bfce00
   - enabled: 1
-    path: Assets/Scenes/mariokartcircuit.unity
+    path: Assets/Scenes/Circuits/MarioCircuit.unity
     guid: cf495d700ce66564fba07d97970cec47
   m_configObjects: {}

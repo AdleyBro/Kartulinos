@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using kart_action;
+using power_up;
 
 public class GreenShell : Item
 {
     public GreenShell() : base("UI/ItemHud/greenshell") { }
 
-    public override void Utilize(KartMovement2 player)
+    public override PowerUpState GetPowerUpState(KartAction k)
     {
-        GameObject shell = Resources.Load<GameObject>("GreenShell");
-        player.SpawnItem(shell);
+        return new GreenShellState(k);
     }
 }

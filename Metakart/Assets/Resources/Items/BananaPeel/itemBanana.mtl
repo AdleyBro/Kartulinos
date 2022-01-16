@@ -1,0 +1,9 @@
+# Created by Every File Explorer
+
+newmtl mat_itemBanana
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.3019608 0.3019608 0.3019608
+d 1
+map_Kd Tex/itemBanana.png
+

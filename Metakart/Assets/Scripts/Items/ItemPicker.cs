@@ -4,18 +4,8 @@ public class ItemPicker : MonoBehaviour
 {
     private readonly Item[] allItemsList = {
         new Boost(),
-        new GreenShell()};
-
-    public void Start()
-    {
-        GameObject obj = new GameObject();
-        CoroutineController controller = obj.AddComponent<CoroutineController>();
-
-        foreach (Item item in allItemsList)
-        {
-            item.coroutineController = controller;
-        }
-    }
+        new GreenShell(),
+        new BananaPeel()};
 
     public Item PickRandomItem()
     {

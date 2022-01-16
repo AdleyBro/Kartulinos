@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+﻿using kart_action;
+using power_up;
 
 public abstract class Item
 {
-    public CoroutineController coroutineController;
-    public string name;
+    private readonly string iconImagePath;
 
-    public Item(string _name)
+    public Item(string iconImagePath)
     {
-        name = _name;
+        this.iconImagePath = iconImagePath;
     }
 
-    public void SetCoroutineController(CoroutineController controller)
-    {
-        coroutineController = controller;
-    }
+    public abstract PowerUpState GetPowerUpState(KartAction k);
 
-    public abstract void Utilize(KartMovement2 player);
+    public string GetIconImagePath()
+    {
+        return iconImagePath;
+    }
 }
