@@ -1,7 +1,7 @@
 # Kartulinos (name yet to be determined)
 Arcade kart racing game, inspired mostly in Mario Kart. It is meant to be a **free**, **open-source game**, so that everyone can contribute to the code. Also it is **meant to give the possibility of creating addons for the game**.
 
-This game is made in **Unity 2020.1.5f1** and the graphics should be low-poly, similar to the NDS Mario Kart. The idea is to make it "simple" and funny to play, especially with the intention to facilitate the addition of mods or addons.
+This game is being made in **Unity 2020.1.5f1** and the graphics should be low-poly, similar to the NDS Mario Kart. The idea is to make it "simple" and funny to play, especially with the intention to facilitate the addition of mods or addons.
 
 **The main priorities right now are:**
 - Make the game playable online (with users setting up dedicated servers, for lack of a better solution)
