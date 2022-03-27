@@ -22,6 +22,11 @@ public class KartStateManager
         return state;
     }
 
+    public bool IsInState(Type _state)
+    {
+        return state.GetType().Equals(_state);
+    }
+
     public bool IsPowerUpActive(Type powerUpType)
     {
         return activePowerUps.ContainsKey(powerUpType);
