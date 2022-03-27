@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CheckpointsInfo : MonoBehaviour
 {
     public Vector3[] cpPos;
-    // Start is called before the first frame update
+
     void Start()
     {
         GetCheckpointsPositions();

@@ -15,7 +15,7 @@ public class @InputManager : IInputActionCollection, IDisposable
     ""name"": ""InputManager"",
     ""maps"": [
         {
-            ""name"": ""Player1"",
+            ""name"": ""KartControl"",
             ""id"": ""aa288812-bd35-4943-b614-7602aa181994"",
             ""actions"": [
                 {
@@ -378,17 +378,17 @@ public class @InputManager : IInputActionCollection, IDisposable
         }
     ]
 }");
-        // Player1
-        m_Player1 = asset.FindActionMap("Player1", throwIfNotFound: true);
-        m_Player1_Steering = m_Player1.FindAction("Steering", throwIfNotFound: true);
-        m_Player1_Accelerating = m_Player1.FindAction("Accelerating", throwIfNotFound: true);
-        m_Player1_Regressing = m_Player1.FindAction("Regressing", throwIfNotFound: true);
-        m_Player1_LookBack = m_Player1.FindAction("LookBack", throwIfNotFound: true);
-        m_Player1_Drifting = m_Player1.FindAction("Drifting", throwIfNotFound: true);
-        m_Player1_UsingItem = m_Player1.FindAction("UsingItem", throwIfNotFound: true);
-        m_Player1_GetItem = m_Player1.FindAction("GetItem", throwIfNotFound: true);
-        m_Player1_LeftJoyStick = m_Player1.FindAction("LeftJoyStick", throwIfNotFound: true);
-        m_Player1_Teleport = m_Player1.FindAction("Teleport", throwIfNotFound: true);
+        // KartControl
+        m_KartControl = asset.FindActionMap("KartControl", throwIfNotFound: true);
+        m_KartControl_Steering = m_KartControl.FindAction("Steering", throwIfNotFound: true);
+        m_KartControl_Accelerating = m_KartControl.FindAction("Accelerating", throwIfNotFound: true);
+        m_KartControl_Regressing = m_KartControl.FindAction("Regressing", throwIfNotFound: true);
+        m_KartControl_LookBack = m_KartControl.FindAction("LookBack", throwIfNotFound: true);
+        m_KartControl_Drifting = m_KartControl.FindAction("Drifting", throwIfNotFound: true);
+        m_KartControl_UsingItem = m_KartControl.FindAction("UsingItem", throwIfNotFound: true);
+        m_KartControl_GetItem = m_KartControl.FindAction("GetItem", throwIfNotFound: true);
+        m_KartControl_LeftJoyStick = m_KartControl.FindAction("LeftJoyStick", throwIfNotFound: true);
+        m_KartControl_Teleport = m_KartControl.FindAction("Teleport", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -435,69 +435,69 @@ public class @InputManager : IInputActionCollection, IDisposable
         asset.Disable();
     }
 
-    // Player1
-    private readonly InputActionMap m_Player1;
-    private IPlayer1Actions m_Player1ActionsCallbackInterface;
-    private readonly InputAction m_Player1_Steering;
-    private readonly InputAction m_Player1_Accelerating;
-    private readonly InputAction m_Player1_Regressing;
-    private readonly InputAction m_Player1_LookBack;
-    private readonly InputAction m_Player1_Drifting;
-    private readonly InputAction m_Player1_UsingItem;
-    private readonly InputAction m_Player1_GetItem;
-    private readonly InputAction m_Player1_LeftJoyStick;
-    private readonly InputAction m_Player1_Teleport;
-    public struct Player1Actions
+    // KartControl
+    private readonly InputActionMap m_KartControl;
+    private IKartControlActions m_KartControlActionsCallbackInterface;
+    private readonly InputAction m_KartControl_Steering;
+    private readonly InputAction m_KartControl_Accelerating;
+    private readonly InputAction m_KartControl_Regressing;
+    private readonly InputAction m_KartControl_LookBack;
+    private readonly InputAction m_KartControl_Drifting;
+    private readonly InputAction m_KartControl_UsingItem;
+    private readonly InputAction m_KartControl_GetItem;
+    private readonly InputAction m_KartControl_LeftJoyStick;
+    private readonly InputAction m_KartControl_Teleport;
+    public struct KartControlActions
     {
         private @InputManager m_Wrapper;
-        public Player1Actions(@InputManager wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Steering => m_Wrapper.m_Player1_Steering;
-        public InputAction @Accelerating => m_Wrapper.m_Player1_Accelerating;
-        public InputAction @Regressing => m_Wrapper.m_Player1_Regressing;
-        public InputAction @LookBack => m_Wrapper.m_Player1_LookBack;
-        public InputAction @Drifting => m_Wrapper.m_Player1_Drifting;
-        public InputAction @UsingItem => m_Wrapper.m_Player1_UsingItem;
-        public InputAction @GetItem => m_Wrapper.m_Player1_GetItem;
-        public InputAction @LeftJoyStick => m_Wrapper.m_Player1_LeftJoyStick;
-        public InputAction @Teleport => m_Wrapper.m_Player1_Teleport;
-        public InputActionMap Get() { return m_Wrapper.m_Player1; }
+        public KartControlActions(@InputManager wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Steering => m_Wrapper.m_KartControl_Steering;
+        public InputAction @Accelerating => m_Wrapper.m_KartControl_Accelerating;
+        public InputAction @Regressing => m_Wrapper.m_KartControl_Regressing;
+        public InputAction @LookBack => m_Wrapper.m_KartControl_LookBack;
+        public InputAction @Drifting => m_Wrapper.m_KartControl_Drifting;
+        public InputAction @UsingItem => m_Wrapper.m_KartControl_UsingItem;
+        public InputAction @GetItem => m_Wrapper.m_KartControl_GetItem;
+        public InputAction @LeftJoyStick => m_Wrapper.m_KartControl_LeftJoyStick;
+        public InputAction @Teleport => m_Wrapper.m_KartControl_Teleport;
+        public InputActionMap Get() { return m_Wrapper.m_KartControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(Player1Actions set) { return set.Get(); }
-        public void SetCallbacks(IPlayer1Actions instance)
+        public static implicit operator InputActionMap(KartControlActions set) { return set.Get(); }
+        public void SetCallbacks(IKartControlActions instance)
         {
-            if (m_Wrapper.m_Player1ActionsCallbackInterface != null)
+            if (m_Wrapper.m_KartControlActionsCallbackInterface != null)
             {
-                @Steering.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnSteering;
-                @Steering.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnSteering;
-                @Steering.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnSteering;
-                @Accelerating.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAccelerating;
-                @Accelerating.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAccelerating;
-                @Accelerating.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAccelerating;
-                @Regressing.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnRegressing;
-                @Regressing.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnRegressing;
-                @Regressing.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnRegressing;
-                @LookBack.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLookBack;
-                @LookBack.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLookBack;
-                @LookBack.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLookBack;
-                @Drifting.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnDrifting;
-                @Drifting.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnDrifting;
-                @Drifting.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnDrifting;
-                @UsingItem.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUsingItem;
-                @UsingItem.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUsingItem;
-                @UsingItem.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUsingItem;
-                @GetItem.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnGetItem;
-                @GetItem.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnGetItem;
-                @GetItem.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnGetItem;
-                @LeftJoyStick.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLeftJoyStick;
-                @LeftJoyStick.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLeftJoyStick;
-                @LeftJoyStick.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnLeftJoyStick;
-                @Teleport.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnTeleport;
-                @Teleport.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnTeleport;
-                @Teleport.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnTeleport;
+                @Steering.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnSteering;
+                @Steering.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnSteering;
+                @Steering.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnSteering;
+                @Accelerating.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnAccelerating;
+                @Accelerating.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnAccelerating;
+                @Accelerating.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnAccelerating;
+                @Regressing.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnRegressing;
+                @Regressing.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnRegressing;
+                @Regressing.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnRegressing;
+                @LookBack.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLookBack;
+                @LookBack.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLookBack;
+                @LookBack.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLookBack;
+                @Drifting.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnDrifting;
+                @Drifting.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnDrifting;
+                @Drifting.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnDrifting;
+                @UsingItem.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnUsingItem;
+                @UsingItem.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnUsingItem;
+                @UsingItem.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnUsingItem;
+                @GetItem.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnGetItem;
+                @GetItem.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnGetItem;
+                @GetItem.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnGetItem;
+                @LeftJoyStick.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLeftJoyStick;
+                @LeftJoyStick.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLeftJoyStick;
+                @LeftJoyStick.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnLeftJoyStick;
+                @Teleport.started -= m_Wrapper.m_KartControlActionsCallbackInterface.OnTeleport;
+                @Teleport.performed -= m_Wrapper.m_KartControlActionsCallbackInterface.OnTeleport;
+                @Teleport.canceled -= m_Wrapper.m_KartControlActionsCallbackInterface.OnTeleport;
             }
-            m_Wrapper.m_Player1ActionsCallbackInterface = instance;
+            m_Wrapper.m_KartControlActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Steering.started += instance.OnSteering;
@@ -530,7 +530,7 @@ public class @InputManager : IInputActionCollection, IDisposable
             }
         }
     }
-    public Player1Actions @Player1 => new Player1Actions(this);
+    public KartControlActions @KartControl => new KartControlActions(this);
     private int m_TestSchemeIndex = -1;
     public InputControlScheme TestScheme
     {
@@ -549,7 +549,7 @@ public class @InputManager : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_Player2SchemeIndex];
         }
     }
-    public interface IPlayer1Actions
+    public interface IKartControlActions
     {
         void OnSteering(InputAction.CallbackContext context);
         void OnAccelerating(InputAction.CallbackContext context);

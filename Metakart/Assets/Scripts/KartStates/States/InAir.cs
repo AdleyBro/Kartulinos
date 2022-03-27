@@ -9,25 +9,17 @@ namespace kartstates
 
         public override KartState CheckStateChange()
         {
-            if (k.isOnFloor)
+            if (k.groundInfo.IsOnFloor())
                 return StatesList.OnFloor(k);
             else
                 return null;
         }
 
-        public override void Update()
-        {
-            k.floorNormalV = k.groundInfo.floorNormal;
-            if (k.floorNormalV == Vector3.zero)
-                k.floorNormalV = Vector3.up;
-
-            k.wantedRotation = Quaternion.FromToRotation(k.kartBody.transform.up, k.floorNormalV) * k.kartBody.rotation;
-        }
         public override void FixedUpdate()
         {
-            k.kartBody.AddForce(Vector3.down * k.stats.mass * 20f);
+            k.krigidbody.AddForce(Vector3.down * k.stats.mass * 20f);
 
-            k.kartBody.rotation = Quaternion.Slerp(k.kartBody.rotation, k.wantedRotation, k.rotationSpeed * Time.fixedDeltaTime);
+            k.steering.AlignKartToNormal(Vector3.up, 8f);
         }
     }
 }

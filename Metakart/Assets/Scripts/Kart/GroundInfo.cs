@@ -6,14 +6,12 @@ public class GroundInfo
 {
     private bool hugFloor;
     private bool isOnFloor;
-    public readonly float rayDistance;
+    private readonly float rayDistance;
     private float smallestDist;
-    public float frontalFricForce;
-    public float lateralFricForce;
-    public float floorDistance; //Is the smallest distance from one of the four raycasts to the floor
-    public string floorType;
-    public Vector3 floorNormal;
-    public RaycastHit[] hitsList;
+    private float floorDistance; //Is the smallest distance from one of the four raycasts to the floor
+    private string floorType;
+    private Vector3 floorNormal;
+    private RaycastHit[] hitsList;
     private Stack<RaycastHit> raycastHits;
 
     // float array should ALWAYS have two values. 
@@ -106,14 +104,16 @@ public class GroundInfo
             floorType = hit.transform.tag;
     }
 
-    public void UpdateFrictionForces()
+    public float[] GetFrictionForces(Vector3 raycastPos, Vector3 direction)
     {
-        float[] forces;
-        if (!frictionForces.TryGetValue(floorType, out forces))
-            frictionForces.TryGetValue("Road", out forces);
+        string floorType = "Road";
+        if (Physics.Raycast(raycastPos, direction, out RaycastHit hit, rayDistance))
+            floorType = hit.transform.tag;
 
-        frontalFricForce = forces[0];
-        lateralFricForce = forces[1];
+        float[] forces;
+        frictionForces.TryGetValue(floorType, out forces);
+
+        return forces;
     }
 
     public void CheckGroundShell(Transform rayPos, SphereCollider shellCollider, Vector3 shellDown)
@@ -130,6 +130,16 @@ public class GroundInfo
             floorNormal = Vector3.up;
             floorDistance = smallestDist;
         }
+    }
+
+    public float GetFloorDistance()
+    {
+        return floorDistance;
+    }
+
+    public Vector3 GetFloorNormal()
+    {
+        return floorNormal;
     }
 
     public float FloorAngle(Vector3 kartNormal)

@@ -10,9 +10,9 @@ namespace kartstates
 
         public override KartState CheckStateChange()
         {
-            if (k.isOnFloor)
+            if (k.groundInfo.IsOnFloor())
             {
-                if (Drifting.CanStartDrifting(k))
+                if (DriftingState.CanStartDrifting(k))
                     return StatesList.Drifting(k);
                 else
                     return null;
@@ -33,8 +33,6 @@ namespace kartstates
             ApplyFloorFriction(k);
 
             KeepVelocityAttachedToFloor(k);
-
-            KeepWheelsOffset(k);
 
             RotateKartToFloorNormal(k);
 
@@ -62,12 +60,7 @@ namespace kartstates
 
         public void RotateKartToFloorNormal(KartAction k)
         {
-            OnFloorUtils.RotateKartToFloorNormal(k);
-        }
-
-        public void KeepWheelsOffset(KartAction k)
-        {
-            OnFloorUtils.KeepWheelsOffset(k);
+            k.steering.AlignKartToNormal(k.groundInfo.GetFloorNormal(), 12f);
         }
 
         public void KeepVelocityAttachedToFloor(KartAction k)
@@ -87,16 +80,10 @@ namespace kartstates
             k.groundInfo.CheckFloorType(k.raysPosList[4].position, -k.kartBody.transform.up);
         }
 
-        public void UpdateIsMovingForward(KartAction k)
-        {
-            OnFloorUtils.UpdateIsMovingForward(k);
-        }
-
         public void ApplyKartSteering(KartAction k)
         {
-            OnFloorUtils.UpdateIsMovingForward(k);
-
-            int sense = k.isMovingForward ? 1 : -1;
+            bool isMovingForward = k.steering.IsMovingForward();
+            int sense = isMovingForward ? 1 : -1;
             float floatCanSteer = k.kartBody.velocity.magnitude > 1f ? 1f : k.kartBody.velocity.magnitude;
 
             Quaternion q = Quaternion.AngleAxis(k.steerInput * 90f * sense * floatCanSteer * Time.fixedDeltaTime, k.kartBody.transform.up);

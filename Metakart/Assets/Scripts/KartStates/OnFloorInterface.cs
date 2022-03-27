@@ -6,8 +6,6 @@ public interface OnFloorInterface
 
     void RotateKartToFloorNormal(KartAction k);
     
-    void KeepWheelsOffset(KartAction k);
-
     void KeepVelocityAttachedToFloor(KartAction k);
 
     void ApplyAcceleration(KartAction k);

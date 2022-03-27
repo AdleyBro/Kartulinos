@@ -3,7 +3,7 @@ using kart_action;
 
 namespace kartstates
 {
-    public class Drifting : KartState, OnFloorInterface
+    public class DriftingState : KartState, OnFloorInterface
     {
         private float driftingSense;
         private Vector3 rotatedForward;
@@ -22,9 +22,9 @@ namespace kartstates
         private readonly float mediumBoostForce = 1000f;
         private readonly float highBoostForce = 1400f;
 
-        public Drifting(KartAction k) : base(k) 
+        public DriftingState(KartAction k) : base(k) 
         {
-            driftingSense = k.driftingInput;
+            driftingSense = k.controller.Drifting.ReadValue<float>();
             counter = 0f;
             isEndingDrift = false;
         }
@@ -35,7 +35,7 @@ namespace kartstates
                 return null;
             else
             {
-                if (k.isOnFloor)
+                if (k.groundInfo.IsOnFloor())
                     return StatesList.OnFloor(k);
                 else
                     return StatesList.InAir(k);
@@ -53,20 +53,18 @@ namespace kartstates
                 if (counter >= endingDriftDuration)
                     k.stateManager.ChangeState(StatesList.OnFloor(k));
 
-                rotatedForward = Vector3.Slerp(rotatedForward, k.kartBody.transform.forward, 8f * Time.fixedDeltaTime);
+                rotatedForward = Vector3.Slerp(rotatedForward, k.krigidbody.transform.forward, 8f * Time.fixedDeltaTime);
                 k.accelV = rotatedForward * k.stats.maxAccelForce;
-                k.kartBody.AddForce(boostForce * rotatedForward);
+                k.krigidbody.AddForce(boostForce * rotatedForward);
 
 
-                // TODO: Comprimir toda esta parte en una funcion dentro de OnFloorUtils
-                OnFloorUtils.UpdateIsMovingForward(k);
+                bool isMovingForward = k.steering.IsMovingForward();
+                int sense = isMovingForward ? 1 : -1;
+                float floatCanSteer = k.krigidbody.velocity.magnitude > 1f ? 1f : k.kakrigidbodyrtBody.velocity.magnitude;
 
-                int sense = k.isMovingForward ? 1 : -1;
-                float floatCanSteer = k.kartBody.velocity.magnitude > 1f ? 1f : k.kartBody.velocity.magnitude;
+                Quaternion q = Quaternion.AngleAxis(k.steerInput * 90f * sense * floatCanSteer * Time.fixedDeltaTime, k.krigidbody.transform.up);
 
-                Quaternion q = Quaternion.AngleAxis(k.steerInput * 90f * sense * floatCanSteer * Time.fixedDeltaTime, k.kartBody.transform.up);
-
-                k.kartBody.rotation = q * k.kartBody.rotation;
+                k.krigidbody.rotation = q * k.krigidbody.rotation;
             } else if (k.driftingInput == 0f)
             {
                 if (counter < highBoostPeriod)
@@ -108,7 +106,7 @@ namespace kartstates
 
         public override void ApplyLateForces()
         {
-            k.kartBody.AddForce(k.accelV);
+            k.krigidbody.AddForce(k.accelV);
         }
 
         public override void OnCollisionEnter(Collision co)
@@ -128,13 +126,13 @@ namespace kartstates
         public static bool CanStartDrifting(KartAction k)
         {
             return k.driftingInput != 0f && k.kartBody.velocity.magnitude > 30f * 0.5f
-                    && k.isOnFloor && k.accelInput > 0f;
+                    && k.groundInfo.IsOnFloor() && k.accelInput > 0f;
         }
 
         private bool CanKeepDrifting(KartAction k)
         {
             return isEndingDrift || (k.kartBody.velocity.magnitude > 30f * 0.5f
-                    && k.isOnFloor && k.accelInput > 0f);
+                    && k.groundInfo.IsOnFloor() && k.accelInput > 0f);
         }
 
         public void RotateKartToFloorNormal(KartAction k)

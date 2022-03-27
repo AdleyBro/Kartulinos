@@ -2,7 +2,7 @@
     "name": "InputManager",
     "maps": [
         {
-            "name": "Player1",
+            "name": "KartControl",
             "id": "aa288812-bd35-4943-b614-7602aa181994",
             "actions": [
                 {
